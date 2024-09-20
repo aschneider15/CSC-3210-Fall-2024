@@ -36,10 +36,13 @@
   (lambda (parsed-code)
     (cond
       ((null? parsed-code) '())
+      ((list? (car parsed-code)) (cons (reverse-parser (car parsed-code)) (reverse-parser (cdr parsed-code))))
       ((eq? (car parsed-code) 'app-exp)
-       (cons (list 'call (reverse-parser (cadr parsed-code))) (reverse-parser (caddr parsed-code))))
+       (append (list 'call (reverse-parser (cadr parsed-code)))
+               (reverse-parser (caddr parsed-code))))
       ((eq? (car parsed-code) 'func-exp)
-       (cons (list 'function (list (cadr (cadr parsed-code)))) (reverse-parser (cadr (caddr parsed-code)))))
+       (append (list 'function (list (cadr (cadr parsed-code)))) (reverse-parser (cadr (caddr parsed-code)))
+               ))
       ((eq? (car parsed-code) 'body-exp) (reverse-parser (cdr parsed-code)))
       ((eq? (car parsed-code) 'var-exp) (reverse-parser (cdr parsed-code)))
       ((eq? (car parsed-code) 'num-exp) (reverse-parser (cdr parsed-code)))
@@ -48,4 +51,4 @@
     )
   )
 
-(reverse-parser (blaaade-parser '(call (function (x) x) 1)))
+(reverse-parser (blaaade-parser '(call (function (x) x) 8)))
