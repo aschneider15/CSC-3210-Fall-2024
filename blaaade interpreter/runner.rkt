@@ -1,18 +1,9 @@
 #lang racket
 (require "parser.rkt")
+(require "utils.rkt")
 ;blaaade
 (define var-scope
   '((a 1) (b 2) (x 5))
-  )
-
-(define resolve-helper
-  (lambda (varname scope)
-    (cond
-      ((null? scope) (println "blaaade cannot find the variable"))
-      ((eq? (car (car scope)) varname) (cadr (car scope)))
-      (else (resolve-helper varname (cdr scope)))
-      )
-    )
   )
 
 (define resolve
@@ -48,4 +39,4 @@
     )
   )
 
-(reverse-parser (blaaade-parser '(call (function (x) x) 1)))
+(provide (all-defined-out))
