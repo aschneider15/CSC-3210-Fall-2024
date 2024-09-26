@@ -2,34 +2,22 @@
 (require "parser.rkt")
 (require "utils.rkt")
 (require "interpreter.rkt")
-(require "runner.rkt")
 
-(define var-scope
-  '((a 1) (b 2) (x 5))
+(define var-env
+  '(((a 1) (b 2) (x 5)))
   )
-
-
 
 (define execute
   (lambda (code)
-    (blaaade-interpreter (blaaade-parser code) var-scope)
+    (blaaade-interpreter (blaaade-parser code) var-env)
     )
   )
 
-;(blaaade-interpreter (blaaade-parser '(call (function (x) x) y)) var-scope)
-;(execute '(call (function (x) x) (call (function (z) z) 2)))
-
-;(call (function (x) x) a)
-;(call (function (x) x) 2) -> 2 numeric expression
-;(1 + 1) -> math expression
+;(execute '(call (function (x) (x == 1)) a))
 
 ;(blaaade-interpreter (blaaade-parser '(1 + 2)) var-scope)
+;(blaaade-parser (x == 1)) -> (boolean-exp (var-exp x) (op ==) (num-exp 1)
 
-; expected output: '(app-exp (func-exp (params x) (body-exp (var-exp x))) (var-exp a))
-(blaaade-parser '(call (function (x) x) a))
-
-; expected output: 1
-(execute '(call (function (x) x) a))
-
-; expected output: '(call (function (x) x) a))
-(reverse-parser (blaaade-parser '(call (function (x) x) a)))
+;(ask (a == 1) b x) -> (ask-exp (boolean-exp (var-exp a) (op ==) (num-exp 1))
+; (true-exp (var-exp b))
+; (false-exp (var-exp x))
