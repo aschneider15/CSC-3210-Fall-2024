@@ -5,3 +5,6 @@
 *.scm~
 *.scm#*
 .#*.scm
+
+# Ignore backup files. These can be kept on the local branches.
+.bak
