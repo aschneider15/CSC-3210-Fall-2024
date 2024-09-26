@@ -2,6 +2,7 @@
 (require "parser.rkt")
 (require "utils.rkt")
 (require "interpreter.rkt")
+(require "runner.rkt")
 
 (define var-env
   '(((a 1) (b 2) (x 5)))
@@ -23,7 +24,17 @@
 ; (false-exp (var-exp x))
 
 
-; Assignment 8 -  Implement a parser and complete numeric and math expressions so that the interpreter can execute the math expression result.
+; ___Assignment 7___
+; Expected output: '(app-exp (func-exp (params x) (body-exp (var-exp x))) (var-exp a))
+(blaaade-parser '(call (function (x) x) a))
+
+; Expected output: 1
+(execute '(call (function (x) x) a))
+
+; Expected output: '(call (function (x) x) a)
+(reverse-parser (blaaade-parser '(call (function (x) x) a)))
+
+; ___Assignment 8___
 
 ; Expected output: (app-exp (func-exp (params x) (body-exp (math-exp (var-exp x) (op *) (num-exp 2)))) (var-exp a))
 (blaaade-parser '(call (function (x) (x * 2)) a))
