@@ -8,19 +8,51 @@
       ((null? parsed-code) (println "blaaade's interpreter found illegal code."))
       ((eq? (car parsed-code) 'var-exp) (var-exp-helper parsed-code env))
       ((eq? (car parsed-code) 'num-exp) (cadr parsed-code))
-      ((eq? (car parsed-code) 'app-exp)
+      ;(app-exp (func-exp ((parmas x) (params y)) (body-exp (math-exp
+;(var-exp x) (op +) (var-exp y)) ((var-exp a) (var-exp b)))
+      ((and (eq? (car parsed-code) 'app-exp)
+            (eq? (length (cadr (cadr parsed-code)))
+            (length (caddr parsed-code))))
        (let
            (
             (local_env
              (cons
-              (list (list (cadr (cadr (cadr parsed-code))) (blaaade-interpreter (caddr parsed-code) env)))
+              (combination
+               (map cadr (cadr (cadr parsed-code)))
+               (map (lambda (x) (blaaade-interpreter x env)) (caddr parsed-code)))
               env))
             )
          (blaaade-interpreter (cadr (caddr (cadr parsed-code))) local_env)
          )
        )
+      ;(post-exp (var-exp c) (num-exp 2))
+      ;(((f 2))((a 1)(b 2)(x 5))) -> (((c 2)(f 2))((a 1)(b 2)(x 5)))
+      ((eq? (car parsed-code) 'post-exp)
+       (if (env-contains-name? (cadr (cadr parsed-code)) env)
+           (println "Cannot declare used variable.")
+           (set! env (let
+               ((new-pair
+           (list
+            (cadr (cadr parsed-code))
+            (blaaade-interpreter (caddr parsed-code) env))))
+             (if (null? env) (list (list new-pair))
+                 (cons (cons (new-pair) (car env)) (cdr env)))))))
       ((eq? (car parsed-code) 'math-exp) (math-exp-helper parsed-code env))
-      ((eq? (car parsed-code) 'boolean-exp) (boolean-exp-helper parsed-code env))
+      ;'(ask-exp (boolean-exp (var-exp a) (op ==) (num-exp 1))
+      ;(true-exp (var-exp b)) (false-exp (var-exp x)))
+      ((eq? (car parsed-code) 'ask-exp)
+       (if (blaaade-interpreter (cadr parsed-code) env)
+           (blaaade-interpreter (cadr (caddr parsed-code)) env)
+           (blaaade-interpreter (cadr (cadddr parsed-code)) env)
+           ))
+      ;(boolean-exp (op !) (var-exp a))
+      ((and (eq? (car parsed-code) 'boolean-exp)
+            (eq? (car (cadr parsed-code)) 'op))
+       (not (blaaade-interpreter (caddr parsed-code) env)))
+      ((and
+        (eq? (car parsed-code) 'boolean-exp)
+        (eq? (car (caddr parsed-code)) 'op))
+        (boolean-exp-helper parsed-code env))
       (else (println "blaaade's interpreter found illegal code."))
       )
     )
