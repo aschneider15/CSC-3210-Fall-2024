@@ -13,4 +13,8 @@
     )
   )
 
-(execute '(queue (post c = 3) (put c = 4) (out c)))
+
+; Environment is (((a 1) (b 2) (x 5)))
+(execute '(call (function (x) (queue (post c = 3) (out c))) (a)))
+
+; As expected, output is 3
