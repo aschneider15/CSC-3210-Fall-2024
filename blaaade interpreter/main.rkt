@@ -13,13 +13,4 @@
     )
   )
 
-;(post-exp (var-exp c) (num-exp 2))
-;(blaaade-parser '(post c = 2))
-
-
-; Code Assignment 9
-(blaaade-parser '(ask (b == 2) a x))
-
-; Code Assignment 10
-(execute '(call (function (x y) (x + y)) (a b)))
-(execute '(ask (b == 2) a x))
+(execute '(queue (post c = 3) (put c = 4) (out c)))
