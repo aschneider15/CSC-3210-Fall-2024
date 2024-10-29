@@ -2,6 +2,7 @@
 (require "parser.rkt")
 (require "utils.rkt")
 (require "interpreter.rkt")
+(require "interpreter-v2.rkt")
 
 (define var-env
   '(((a 1) (b 2) (x 5)))
@@ -13,7 +14,21 @@
     )
   )
 
-; expected output: '(wahl-exp (boolean-exp (var-exp a) (op <) (num-exp 10)) (body-exp (queue-exp (put-exp (var-exp a) (math-exp (var-exp a) (op +) (num-exp 1))) (out-exp (var-exp a)))))
-(blaaade-parser '(wahl (a < 10) (queue (put a = (a + 1)) (out a))))
-; expected output: 1\n, 2\n, 3\n, 4\n, 5\n, 6\n, 7\n, 8\n, 9\n, 10\n, wahl-exp ends here
-(execute '(wahl (a < 10) (queue (put a = (a + 1)) (out a))))
+;(execute '(rough a 1 (a < 20) (a + 1) (queue (put a = (a + 1)) (out a))))
+(blaaade-parser '(queue (put a = 3) (out a)))
+
+(blaaade-2-interpreter (blaaade-parser '(queue (put a = 3) (out a))) var-env)
+;(queue (post a = 1) (ask (a < 20) ((put a = (a + 1)) (out a))) (rough-continue a 1 (a < 20) (a + 1)
+; (queue (put a = (a + 1)) (out a))))
+;whenever we are building the loop, we should treat it as push new statement to queue
+;for(int a = 1; a < 20; a = a + 1)
+;{
+;  a = a + 1;
+;  print(a);
+;}
+;initial rough declare a in the environment
+;following rough update a only
+;a = 0, output a
+;a = a + 1, output a
+;a = a + 1, output a
+;..repeat 10 times

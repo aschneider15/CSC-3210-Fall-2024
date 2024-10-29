@@ -79,4 +79,26 @@
     )
   )
 
+(define get-list-item-helper
+  (lambda (lst index pos)
+    (cond
+      ((null? lst) (displayln "index out of bound"))
+      ((eq? index pos) (car lst))
+      (else (get-list-item-helper (cdr lst) index (+ pos 1)))
+      )
+    )
+  )
+
+(define get-list-item
+  (lambda (lst index)
+    (get-list-item-helper lst index 0)
+    )
+  )
+
+(define var-exp-helper
+  (lambda (parsed-code env)
+    (resolve-env (cadr parsed-code) env)
+    )
+  )
+
 (provide (all-defined-out))
