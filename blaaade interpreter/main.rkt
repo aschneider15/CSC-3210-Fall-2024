@@ -14,21 +14,12 @@
     )
   )
 
-;(execute '(rough a 1 (a < 20) (a + 1) (queue (put a = (a + 1)) (out a))))
-(blaaade-parser '(queue (put a = 3) (out a)))
+; expected output: 0 1 2 3 4 5 6 7 8 9 \n
+(execute '(rough a 0 (a < 10) (a + 1) (out a)))
 
-(blaaade-2-interpreter (blaaade-parser '(queue (put a = 3) (out a))) var-env)
-;(queue (post a = 1) (ask (a < 20) ((put a = (a + 1)) (out a))) (rough-continue a 1 (a < 20) (a + 1)
-; (queue (put a = (a + 1)) (out a))))
-;whenever we are building the loop, we should treat it as push new statement to queue
-;for(int a = 1; a < 20; a = a + 1)
-;{
-;  a = a + 1;
-;  print(a);
-;}
-;initial rough declare a in the environment
-;following rough update a only
-;a = 0, output a
-;a = a + 1, output a
-;a = a + 1, output a
-;..repeat 10 times
+;expected output: 2 4 6 8 10 12 14 16 18 20
+(execute '(rough a 1 (a < 20) (a + 1) (queue (put a = (a + 1)) (out a))))
+
+; The output was different than expected: this is because the queue creates a new scope,
+;    so the "a" variable created and incremented in the embedded queue is different from the "a" variable created in the for loop.
+;    Because of this discrepency, the resulting output is actually "2 3 4 5 6 7 ... 20"
