@@ -17,25 +17,22 @@
 ;(department = "cs", subject = "language theory", lesson1 = {deparment: deparment...
 ;lesson: lesson1
 
-(define code
-  '(
-    (mike lesson
-         (department subject)
-         (
-          (put (this <- department) = deparment)
-          (put (this <- subject) = subject)
-          )
-         (
-          (talk () (out "we are talk about subject"))
-          (displaySubject () (out subject))
-          )
-         )
-    (new plt = lesson ("CS" "Language Theory"))
-    )
+(define code '(josh square (x) (out (x * x))))
+
+(define code1 '(
+                (josh square (x) (return (x * x)))
+                (put a = (call square (5)))
+                (out a)
+                (out (call square ((call square (2)))))
+                (josh modulo (c d) (out (c % d)))
+                (call modulo (21 11))
+                )
+  
   )
 
-(parser code)
-;(execute code)
+(execute code)
+(execute code1)
+
 ;(null, (((lesson (source code)) rest-of-env)
 
 ;(new plt = lesson ("CS" "Language Theory"))
