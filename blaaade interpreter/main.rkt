@@ -9,20 +9,36 @@
 
 (define execute
   (lambda (code)
-    (blaaade-2-interpreter (blaaade-2-parser code) var-env)
+    (interpreter (parser code) var-env)
     )
   )
 
-;compiler
-;((out-exp (num-exp 1)) ...)
-;(num-exp 1)
-;(out-exp return-value return-env)
-;rest expressions return-value return-env
-;out-exp what brings into the out-exp: value and env
-(define code '((put b = (2 + 3)) (out b)))
-(blaaade-2-parser code)
-(execute code)
+;scope
+;(department = "cs", subject = "language theory", lesson1 = {deparment: deparment...
+;lesson: lesson1
 
-;(blaaade-2-interpreter (blaaade-2-parser '(out 1)) var-env)
-;1
-;2
+(define code
+  '(
+    (mike lesson
+         (department subject)
+         (
+          (put (this <- department) = deparment)
+          (put (this <- subject) = subject)
+          )
+         (
+          (talk () (out "we are talk about subject"))
+          (displaySubject () (out subject))
+          )
+         )
+    (new plt = lesson ("CS" "Language Theory"))
+    )
+  )
+
+(parser code)
+;(execute code)
+;(null, (((lesson (source code)) rest-of-env)
+
+;(new plt = lesson ("CS" "Language Theory"))
+;(new-exp (var-exp plt) (var-exp lesson) ((str-exp "CS") (str-exp "Language Theory")
+
+
